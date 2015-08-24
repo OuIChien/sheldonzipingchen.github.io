@@ -29,19 +29,7 @@ archive: true
 <!-- Disqus comments -->
 {% if site.disqus %}
     <div class="archive readmore">
-        <h3>Comments</h3>
+        <h3>评论</h3>
         {% include disqus.html %}
     </div>
-{% endif %}
-
-<!-- Archive post list -->
-{% if page.archive %}
-    <ul id="post-list" class="archive readmore">
-        <h3>更多的文章</h3>
-        {% for post in site.posts %}
-            <li>
-                <a href="{{ site.baseurl }}{{ post.url | remove_first: '/' }}">{{ post.title }}<aside class="dates">{{ post.date | date:"%b %d" }}</aside></a>
-            </li>
-        {% endfor %}
-    </ul>
 {% endif %}
