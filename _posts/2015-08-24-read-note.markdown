@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "读书笔记"
 date: 2015-08-24 21:56:00 +0800
 description: 几本经典书籍的读书笔记
+categories: 读书笔记
 ---
 
 ## 代码大全

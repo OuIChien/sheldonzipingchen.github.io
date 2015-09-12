@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "处理表单"
 date: 2015-08-14 17:24:18 +0800
 description: Flask 的表单处理方式
+categories: python flask
 ---
 
 表单是让用户与我们的网页应用程序交互的基本元素。Flask 本身并不会帮助我们处理表单，但是 Flask-WTF 扩展让我们在我们的 Flask 应用程序中使用流行的 WTForms 包。这个包使得定义表单和处理提交容易一些。

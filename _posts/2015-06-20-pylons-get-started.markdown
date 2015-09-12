@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "Pylons 入门"
 date: 2015-06-20 00:30:48 +0800
 description: Pylons 入门教程
+categories: python pylons
 ---
 
 ## 环境要求

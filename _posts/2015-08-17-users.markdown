@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "与用户有关的进阶技能"
 date: 2015-08-17 12:09:40 +0800
 description: Flask 一些可以优化用户体验的东西
+categories: python flask
 ---
 
 一个现代 web 应用程序需要做的最常见的事情就是处理用户。拥有基本账号功能的一个应用程序需要处理很多的事

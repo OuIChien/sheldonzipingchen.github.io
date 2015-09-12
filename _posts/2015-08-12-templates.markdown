@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "模板"
 date: 2015-08-12 16:12:58 +0800
 description: Flask 模板的简介和使用方法
+categories: pythn flask
 ---
 
 虽然 Flask 并不强迫我们使用任何一个特定的模板语言，它假设我们要使用 Jinja。在 Flask 社区中大部分开发者使用 Jinja，我建议你们也这样做。有很多的扩展帮助我们使用其它的模板语言，像 Flask-Genshi 和 Flask-Mako。坚持使用默认的模板语言，除非你有更好的理由使用其它的模板语言。还不知道 Jinja 语法不是一个好的理由！你会节省大量的时间和烦恼。

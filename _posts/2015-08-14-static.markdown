@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "静态文件"
 date: 2015-08-14 16:58:09 +0800
 description: Flask 静态文件的处理方式。
+categories: python flask
 ---
 
 顾名思义，静态文件就是那些不会改变的文件。在一般的应用程序中，静态文件包括 CSS 文件，JavaScript 文件以及图片。它们也可能是音频文件以及其它类似的东西。

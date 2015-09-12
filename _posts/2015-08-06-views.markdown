@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "Flask 视图和路由的进阶技能"
 date: 2015-08-06 10:49:25 +0800
 description: Flask 的视图和路由的简介和说明等等
+categories: python flask
 ---
 
 # 视图装饰器

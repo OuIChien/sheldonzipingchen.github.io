@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "Python 面向对象编程概述"
 date: 2015-06-25 00:57:48 +0800
 description: Python 面向对象编程入门笔记
+categories: python
 ---
 ## 类与实例
 

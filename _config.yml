@@ -1,42 +1,11 @@
-name: Sheldon Chen
-description: Even the smallest person can <br/>change the course of the future
-meta_description: "我的生活、工作、学习的记录"
+# Site settings
+title: Sheldon Chen 的自言自语
+email: sheldonziping@163.com
+description: Even the smallest person can change the course of the future
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://sheldontalk.com" # the base hostname & protocol for your site
+twitter_username: SheldonChen1
+github_username: sheldonzipingchen
 
-aboutPage: true
-
+# Build settings
 markdown: kramdown
-highlighter: pygments
-
-paginate: 8
-baseurl: /
-domain_name: 'http://sheldontalk.com'
-google_analytics: 'UA-49607475-1'
-disqus: true
-disqus_shortname: 'SheldonTalk'
-
-# Details for the RSS feed generator
-url:            'http://sheldontalk.com'
-author:         'Sheldon Chen'
-authorTwitter:  'YourTwitterUsername'
-
-permalink:       /:year/:title/
-
-defaults:
-    -
-        scope:
-            path: "" # empty string for all files
-            type: pages
-        values:
-            layout: default
-    -
-        scope:
-            path: "" # empty string for all files
-            type: posts
-        values:
-            layout: post
-    -
-        scope:
-            path: ""
-            type: drafts
-        values:
-            layout: post

@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "如何成为Python高手"
 date: 2015-06-20 00:41:00 +0800
 description: 学习 Python 的资料总结
+categories: python 读书笔记
 ---
 
 原文来源于：[如何成为Python高手](http://blogread.cn/it/article/3892?f=wb)

@@ -1,7 +1,9 @@
 ---
+layout: post
 title: DHH 谈混合移动应用开发
 date: 2015-07-24 15:38:45 +0800
 description: 移动应用开发的总结
+categories: python flask
 ---
 
 [37signals](http://37signals.com/) 在2013年2月发布了 Basecamp 的 iPhone app，

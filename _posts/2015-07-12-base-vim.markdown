@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "基本的vim概念"
 date: 2015-07-12 19:32:33 +0800
 description: vim 学习笔记
+categories: vim
 ---
 
 这篇文章摘要 [macshuo](http://macshuo.com/?p=877)。作为学习 Vim 的笔记。

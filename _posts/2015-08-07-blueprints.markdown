@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "蓝图"
 date: 2015-08-07 23:40:47 +0800
 description: Flask 的蓝图简介以及使用方法。
+categories: python flask
 ---
 
 ## 什么是蓝图？

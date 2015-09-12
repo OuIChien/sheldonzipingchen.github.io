@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "语法最佳实践 —— 低于类级"
 date: 2015-06-20 00:42:40 +0800
 description: Python 学习笔记，列表推导，生成器模式的总结
+categories: python
 ---
 
 

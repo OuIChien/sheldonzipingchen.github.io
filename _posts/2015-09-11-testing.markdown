@@ -1,7 +1,9 @@
 ---
+layout: post
 title: "Rspec 自动化测试"
 date: 2015-09-11 11:39:40 +0800
 description: Rspec 自动化测试，以及在 Rails 中的应用
+categories: ruby rspec
 ---
 
 软件测试可以从不同层面去切入，其中最小的测试粒度叫做单元测试（Unit Test），会对个别的类型和方法测试结果是否如预期一样。再大一点的粒度叫做集成测试（Integration test）。测试多个组件之间的交互是否正确。最大粒度则是验收测收（Acceptance Test），从用户观点来测试整个软件。
