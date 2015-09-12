@@ -1,11 +1,11 @@
 ---
 layout: page
-title: About
+title: 关于
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+性懒，好静，涉猎甚广，然所精者少。遇所好之者，譬如程序，必沉迷其中，恍恍然如癫如痴。
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
+读书非多，然每读必思，偶有心得，自得其乐。遇知其所云者，欣然以为知音，必邀之共饮，所饮不必多，喜闻觥乔迁铿锵之声，与谈笑交错，快意淋漓。
 
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+本性固执，喜钻研，求本质，不满于浮光掠影，故凡可能之事，必躬亲而后快。以求甚解之心。
