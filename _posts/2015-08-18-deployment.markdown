@@ -8,8 +8,6 @@ categories: python flask
 
 我们终于准备好向全世界展示我们的应用程序了。是时候要部署。这个过程可能是痛苦的因为有许多琐碎的事情要去做。当涉及到生产环境的搭建以及服务器的配置方案，这是有很多的选择需要做出。在本文中，我们会讨论一些重要的部分以及一些我们可能会用到的选项（关于主机或者服务器的搭建方式等等）。
 
-<!-- more -->
-
 ## 主机
 
 首先我们需要一台服务器。现在有成千上万的服务器供应商，但是我个人建议的有三家。我不打算在这里介绍如何开始使用它们的细节，因为这是超出了本书的范围。相反我会讨论在它们上托管 Flask 应用程序的好处。
@@ -52,7 +50,7 @@ Digital Ocean 上部署 Flask 的过程与在亚马逊弹性计算云（EC2）�
 
 要使用 Gunicorn，我们要用 Pip 在我们的虚拟环境中安装 `gunicorn` 包。运行我们的应用程序是一个简单的命令行。
 
-~~~ python
+{% highlight python %}
 # app.py
 
 from flask import Flask
@@ -62,17 +60,17 @@ app = Flask(__name__)
 @app.route('/')
 def index():
         return "Hello World!"
-~~~
+{% endhighlight %}
 
 一个简单的应用程序已经完成。现在，为了用 Gunicorn 来服务于它，我们简单地运行 gunicorn 命令行。
 
-~~~ bash
+{% highlight bash %}
 (ourapp)$ gunicorn rocket:app
 2014-03-19 16:28:54 [62924] [INFO] Starting gunicorn 18.0
 2014-03-19 16:28:54 [62924] [INFO] Listening at: http://127.0.0.1:8000 (62924)
 2014-03-19 16:28:54 [62924] [INFO] Using worker: sync
 2014-03-19 16:28:54 [62927] [INFO] Booting worker with pid: 62927
-~~~
+{% endhighlight %}
 
 这时候，当我们的浏览器访问 http://127.0.0.1:8000 的时候，我们应该看到 “Hello World!”。
 
@@ -80,24 +78,24 @@ def index():
 
 如果我们把 Gunicorn 作为一个守护进程的话，我们可能会很难找到进程当后面我们要停止服务器的时候。我们能够告诉 Gunicorn 把进程 ID 放入到一个文件中以便后面我们能够停止或者重启它，而无需搜索整个运行程序的列表。我们使用 `-p <file>` 选项来做到这一点。
 
-~~~ bash
+{% highlight bash %}
 (ourapp)$ gunicorn rocket:app -p rocket.pid -D
 (ourapp)$ cat rocket.pid
 63101
-~~~
+{% endhighlight %}
 
 要重启以及杀死服务器，我们可以分别运行 `kill -HUP` 和 `kill`。
 
-~~~ bash
+{% highlight bash %}
 (ourapp)$ kill -HUP `cat rocket.pid`
 (ourapp)$ kill `cat rocket.pid`
-~~~
+{% endhighlight %}
 
 默认情况下，Gunicorn 运行在端口 8000。我们可以通过添加 -b 绑定选项来更改端口。
 
-~~~ bash
+{% highlight bash %}
 (ourapp)$ gunicorn rocket:app -p rocket.pid -b 127.0.0.1:7999 -D
-~~~
+{% endhighlight %}
 
 ### 让 Gunicorn 对外开放
 
@@ -105,9 +103,9 @@ def index():
 
 如果我们像上面介绍的运行 Gunicorn 的话，我们无法接收到外部的请求，只能接收到本机的请求。这是因为 Gunicorn 默认是绑定到 127.0.0.1。这就意味着它仅仅监听来自服务器本机的连接。这就是我们希望的运行方式，我们会有一个反向代理的服务器，它位于外部于我们的 Gunicorn 服务器之间。然而，如果我们需要为了调试目的接收来自外部的请求，我们可以要求 Gunicorn 绑定到 0.0.0.0。这就是告诉它监听所有的请求。
 
-~~~ bash
+{% highlight bash %}
 (ourapp)$ gunicorn rocket:app -p rocket.pid -b 0.0.0.0:8000 -D
-~~~
+{% endhighlight %}
 
 * [在官方文档](http://docs.gunicorn.org/en/latest/) 中阅读更多关于运行以及部署 Gunicorn 的内容。
 * [Fabric](http://docs.fabfile.org/en/latest/) 是一个工具，它让你舒适地在本机运行所有这些部署以及管理命令行，无需 SSHing 到每一台服务器。
@@ -118,7 +116,7 @@ def index():
 
 为了配置 Nginx 作为运行在 127.0.0.1:8000 上的 Gunicorn 服务器的一个反向代理，我们可以为我们的应用程序创建一个文件： /etc/nginx/sites-available/expl-oreflask.com。
 
-~~~ bash
+{% highlight bash %}
 # /etc/nginx/sites-available/exploreflask.com
 
 # Redirect www.exploreflask.com to exploreflask.com
@@ -144,21 +142,21 @@ server {
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
 }
-~~~
+{% endhighlight %}
 
 现在我们创建一个符号链接指向这个文件到 /etc/nginx/sites-enabled 上并且重启 Nginx。
 
-~~~ bash
+{% highlight bash %}
 $ sudo ln -s \
 /etc/nginx/sites-available/exploreflask.com \
 /etc/nginx/sites-enabled/exploreflask.com
-~~~
+{% endhighlight %}
 
 ### ProxyFix
 
 我们可能会碰到使用 Flask 不能处理代理请求的一些问题。这是与我们设置 Nginx 中配置的那些头有关。我们可以使用 Werkzeug 的 ProxyFix 来修复代理请求的问题。
 
-~~~ python
+{% highlight python %}
 # app.py
 
 from flask import Flask
@@ -174,7 +172,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 @app.route('/')
 def index():
         return "Hello World!"
-~~~
+{% endhighlight %}
 
 * 在 [Werkzeug 官方文档](http://werkzeug.pocoo.org/docs/0.10/contrib/fixers/#werkzeug.contrib.fixers.ProxyFix) 中获取更多关于 ProxyFix 的信息。
 

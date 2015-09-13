@@ -33,7 +33,7 @@ http://myapp.com/accounts/confirm-/Q2hhZCBDYXRsZXR0IHJvY2tzIG15IHNvY2tz。当 Jo
 境的工具（像发送一封邮件确认令牌到一个未确认的邮箱）。在本例中，我们将会使用
 `URLSafeTimedSerializer` 类的一个实例。
 
-~~~ python
+{% highlight python %}
 # ourapp/util/security.py
 
 from itsdangerous import URLSafeTimedSerializer
@@ -41,12 +41,12 @@ from itsdangerous import URLSafeTimedSerializer
 from .. import app
 
 ts = URLSafeTimedSerializer(app.config["SECRET_KEY"])
-~~~
+{% endhighlight %}
 
 当一个用户给我们他们的邮箱地址的时候，我们可以使用它序列化来生成一个确认令牌。我们实现了一个简单的账号
 创建过程，里面就使用了这种方法。
 
-~~~ python
+{% highlight python %}
 # ourapp/views.py
 
 from flask import redirect, render_template, url_for
@@ -86,12 +86,12 @@ def create_account():
         return redirect(url_for("index"))
 
     return render_template("accounts/create.html", form=form)
-~~~
+{% endhighlight %}
 
 我们上面定义的视图处理用户的创建以及发送一封邮件到指定的邮箱地址。你可能注意到我们使用了一个模板用来
 生成邮件内容的 HTML 形式。
 
-~~~ html
+{% highlight html %}
 {% raw %}
 {# ourapp/templates/email/activate.html #}
 {% endraw %}
@@ -107,11 +107,11 @@ to confirm your email address and activate your account:
 --<br>
 Questions? Comments? Email hello@myapp.com.
 </p>
-~~~
+{% endhighlight %}
 
 好了，现在我们只需要实现一个处理邮件中确认链接的视图。
 
-~~~ python
+{% highlight python %}
 # ourapp/views.py
 
 @app.route('/confirm/{% raw %}<token>{% endraw %}')
@@ -129,7 +129,7 @@ def confirm_email(token):
     db.session.commit()
 
     return redirect(url_for('signin'))
-~~~
+{% endhighlight %}
 
 这个视图是一个简单的表单视图。我们只在开始的时候添加了 `try ... except` 来检查令牌是否有效。令牌
 中包含了一个时间戳，因此我们能够告诉 `ts.loads()` 引发一个异常如果它大于 `max_age` 的话。在本例中，
@@ -150,13 +150,13 @@ def confirm_email(token):
 我们将继续并且使用 Flask-Bcrypt 扩展在我们的应用中实现 bcrypt 包。这个包基本上是对 `py-bcrypt`
 包的封装，但是为我们做了一些很烦人的事情（像在比较散列之前检查字符编码等等）。
 
-~~~ python
+{% highlight python %}
 # ourapp/__init__.py
 
 from flask.ext.bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app)
-~~~
+{% endhighlight %}
 
 Bcrypt 算法强烈地被推荐的原因之一就是”未来的适应性“。这就意味着随着时间的推移，当计算能力变得越来越便宜的
 时候，我们可以把它变得越来越困难地被暴力方式来破解，这种暴力方式就是上百万次的猜测密码。我们使用越多
@@ -170,7 +170,7 @@ Bcrypt 算法强烈地被推荐的原因之一就是”未来的适应性“。�
 
 为了测试散列密码花费的时间，我们可以编写一个简单且快速的散列密码的 Python 脚本。
 
-~~~ python
+{% highlight python %}
 # benchmark.py
 
 from flask.ext.bcrypt import generate_password_hash
@@ -178,33 +178,33 @@ from flask.ext.bcrypt import generate_password_hash
 # Change the number of rounds (second argument) until it takes between
 # 0.25 and 0.5 seconds to run.
 generate_password_hash('password1', 12)
-~~~
+{% endhighlight %}
 
 现在我们可以使用 UNIX 的 `time` 工具来记录时间的消耗数。
 
-~~~ bash
+{% highlight bash %}
 $ time python test.py
 
 real    0m0.496s
 user    0m0.464s
 sys     0m0.024s
-~~~
+{% endhighlight %}
 
 我做了一个快速的基准测试在一个小型的服务器上，12 ”循环“（rounds）是一个很合适的值，因此我们使用它来
 配置我的示例。
 
-~~~ python
+{% highlight python %}
 # config.py
 
 BCRYPT_LOG_ROUNDS = 12
-~~~
+{% endhighlight %}
 
 现在 Flask-Bcrypt 已经配置好了，是时候开始散列密码。我们可以在接收来自注册表单的请求的视图中手动
 去散列密码，但是我们必须在密码重置以及密码修改的视图中再次重复这样做。相反，我们要做的就是如何抽象散
 列，以便我们的应用程序无需我们考虑就能自己完成。这里我们会使用一个 `setter`，这样的话当我们设置
 `user.password = 'password1'` 的话，在存储之前就会自动地使用 `Bcrypt` 散列密码。
 
-~~~ python
+{% highlight python %}
 # ourapp/models.py
 
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -223,7 +223,7 @@ class User(db.Model):
     @password.setter
     def _set_password(self, plaintext):
         self._password = bcrypt.generate_password_hash(plaintext)
-~~~
+{% endhighlight %}
 
 我们使用了 SQLAlchemy 的 hybrid 扩展来定义一个属性，这个属性从相同接口调用的时候拥有不同的功能。
 当我们为 `user.password` 属性赋值的时候，我们的 setter 就被调用。在它里面，我们散列一个明文的密
@@ -232,7 +232,7 @@ class User(db.Model):
 
 现在我们使用上面的模型为应用程序实现一个注册视图。
 
-~~~ python
+{% highlight python %}
 # ourapp/views.py
 
 from . import app, db
@@ -249,7 +249,7 @@ def signup():
         return redirect(url_for('index'))
 
     return render_template('signup.html', form=form)
-~~~
+{% endhighlight %}
 
 ## 认证
 
@@ -260,7 +260,7 @@ cookie 知道他们已经登录。
 
 让我们开始用 WTForms 定义一个 `UsernamePassword` 表单。
 
-~~~ python
+{% highlight python %}
 # ourapp/forms.py
 
 from flask_wtf import Form
@@ -271,11 +271,11 @@ from wtforms.validators import DataRequired
 class UsernamePasswordForm(Form):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-~~~
+{% endhighlight %}
 
 下一步我们在我们的用户模型中添加一个方法，该方法用来比较一个字符串和用户存储的散列密码。
 
-~~~ python
+{% highlight python %}
 # ourapp/models.py
 
 from . import db
@@ -286,7 +286,7 @@ class User(db.Model):
 
     def is_correct_password(self, plaintext)
         return bcrypt.check_password_hash(self._password, plaintext)
-~~~
+{% endhighlight %}
 
 ## Flask-Login
 
@@ -297,7 +297,7 @@ class User(db.Model):
 
 在 \_\_init\_\_.py 中，我们将定义 Flask-Login 的 `login\_manager`。
 
-~~~ python
+{% highlight python %}
 # ourapp/__init__.py
 
 from flask.ext.login import LoginManager
@@ -314,7 +314,7 @@ login_manager.login_view =  "signin"
 @login_manager.user_loader
 def load_user(userid):
     return User.query.filter(User.id==userid).first()
-~~~
+{% endhighlight %}
 
 这里我们创建了一个 `LoginManager` 示例，并且用我们的 `app` 对象初始化它，定义登录视图并且告诉
 它如何用一个的用户的 `id` 得到用户对象。这是我们使用 Flask-Login 的最基本的配置。
@@ -323,7 +323,7 @@ def load_user(userid):
 
 现在我们可以定义处理登录的 `signin` 视图。
 
-~~~ python
+{% highlight python %}
 # ourapp/views.py
 
 from flask import redirect, url_for
@@ -346,12 +346,12 @@ def signin():
         else:
             return redirect(url_for('signin'))
     return render_template('signin.html', form=form)
-~~~
+{% endhighlight %}
 
 我们简单地从 Flask-Login 中导入 `login_user` 函数，检查用户登录凭证并且调用
 `login_user(user)`。你可以使用 `logout_user()` 实现用户的退出操作。
 
-~~~ python
+{% highlight python %}
 # ourapp/views.py
 
 from flask import redirect, url_for
@@ -364,7 +364,7 @@ def signout():
     logout_user()
 
     return redirect(url_for('index'))
-~~~
+{% endhighlight %}
 
 ## 忘记密码
 
@@ -380,7 +380,7 @@ def signout():
 
 我们将需要两个表单。一个是用于申请重置密码的链接，一个是用于一旦邮件被认证用于更改密码。
 
-~~~ python
+{% highlight python %}
 # ourapp/forms.py
 
 from flask_wtf import Form
@@ -392,7 +392,7 @@ class EmailForm(Form):
 
 class PasswordForm(Form):
     password = PasswordField('Email', validators=[DataRequired()])
-~~~
+{% endhighlight %}
 
 上面的代码假设我们的密码重置的表单只需要一个密码字段（只需要输入一次新密码）。许多应用程序需要用户输
 入新的密码两次以确保他们没有输错。要做到这一点的话，我们可以简单地添加另一个 `PasswordField` 字段，
@@ -404,7 +404,7 @@ class PasswordForm(Form):
 
 现在我们实现第一个视图，用户可以申请发送密码重置链接到一个指定的邮箱地址。
 
-~~~ python
+{% highlight python %}
 # ourapp/views.py
 
 from flask import redirect, url_for, render_template
@@ -440,12 +440,12 @@ def reset():
 
         return redirect(url_for('index'))
     return render_template('reset.html', form=form)
-~~~
+{% endhighlight %}
 
 当表单接收到一个邮箱地址，我们获取与该邮箱地址有关的用户，生成一个重置的令牌并且发送他们一个密码重置
 的 URL。这个 URL 将他们路由到一个视图，该视图验证令牌并且让他们重置密码。
 
-~~~ python
+{% highlight python %}
 # ourapp/views.py
 
 from flask import redirect, url_for, render_template
@@ -475,12 +475,12 @@ def reset_with_token(token):
         return redirect(url_for('signin'))
 
     return render_template('reset_with_token.html', form=form, token=token)
-~~~
+{% endhighlight %}
 
 我们使用了和验证用户的邮箱地址一样的令牌验证方法。视图把从 URL 中获取的令牌传入到模板中。接着模板使
 用令牌提交表单到正确的 URL。让我们看看模板可能的样子。
 
-~~~ html
+{% highlight html %}
 {% raw %}
 {# ourapp/templates/reset_with_token.html #}
 
@@ -498,7 +498,7 @@ def reset_with_token(token):
 {% raw %}
 {% endblock %}
 {% endraw %}
-~~~
+{% endhighlight %}
 
 ## 摘要
 

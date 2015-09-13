@@ -11,21 +11,19 @@ categories: python
 
 下面的示例展示了如何创建一个类：
 
-~~~ python
+{% highlight python %}
 class MyNewObjectType(bases):
 	' 创建 MyNewObjectType 类'
 	class_suite
-~~~
+{% endhighlight %}
 
 关键字是 class，紧接着一个类名。随后是定义类的类代码。这里通常由各种各样的定义和声明组成。新式类和经典类声明的最大不同在于，所有新式类必须继承至少一个父类，参数 bases 可以是一个（单继承）或多个（多重继承）用于继承的父类。
 
 创建一个实例的过程称作实例化，过程如下（注意：没有使用 new 关键字）：
 
-~~~ python
+{% highlight python %}
 myFirstObject = MyNewObjectType()
-~~~
-
-<!--more-->
+{% endhighlight %}
 
 类名使用我们所熟悉的函数操作符（()），以“函数调用”的形式出现。然后你通常会把这个新建的实例赋给一个变量。赋值在语法上不是必须的，但如果你没有把这个实例保存到一个变量中，它就没用了，会被自动垃圾收集器回收，因为任何引用指向这个实例。这样，你刚刚所做的一切，就是为那个实例分配了一块内存，随即又释放了它。
 
@@ -33,7 +31,7 @@ myFirstObject = MyNewObjectType()
 
 示例如下：
 
-~~~ python
+{% highlight python %}
 class MyData(object):
 	pass
 
@@ -44,17 +42,17 @@ class MyData(object):
 9
 >>> mathObj.x * mathObj.y
 20
-~~~
+{% endhighlight %}
 
 ## 方法
 
 在 Python 中，方法定义在类定义中，但只能被实例所调用。也就是说，调用一个方法的最终途径必须是这样的：（1）定义类（和方法）；（2）创建一个实例；（3）最后一步，用这个实例调用方法。例如：
 
-~~~ python
+{% highlight python %}
 class MyDataWithMethod(object):	# 定义类
 	def printFoo(self):	# 定义方法
 		print 'You invoked printFoo()!'
-~~~
+{% endhighlight %}
 
 这里的 self 参数，它在所有的方法声明中都存在。这个参数代表实例对象本身，当你用实例调用方法时，由解释器传递给方法的，所以，你不需要自己传递 self 进来，因为它是自动传入的。
 
@@ -62,17 +60,17 @@ class MyDataWithMethod(object):	# 定义类
 
 下面是实例化这个类，并调用那个方法：
 
-~~~ python
+{% highlight python %}
 >>> myObj = MyDataWithMethod()
 >>> myObj.printFoo()
 You invoked printFoo()!
-~~~
+{% endhighlight %}
 
 \_\_init\_\_()，是一个特殊的方法。在 Python 中， \_\_init\_\_() 实际上不是一个构造器。你没有调用“new”来创建一个新对象。（Python 根本就没有“new”这个关键字）。取而代之， Python 创建实例后，在实例化过程中，调用 \_\_init\_\_()方法，当一个类被实例化时，就可以定义额外的行为，比如，设定初始值或者运行一些初步诊断代码——主要是在实例被创建后，实例化调用返回这个实例之前，去执行某些特定的任务或设置。
 
 ## 创建一个类（类定义）
 
-~~~ python
+{% highlight python %}
 class AddrBookEntry(object):
 	'address book entry class'
 	def __init__(self, nm, ph):	# 定义构造器
@@ -82,15 +80,16 @@ class AddrBookEntry(object):
 	def updatePhone(self, newph):	# 定义方法
 		self.phone = newph
 		print 'Updated phone# for: ', self.name
-~~~
+{% endhighlight %}
 
 在 AddrBookEntry 类的定义中，定义了两个方法： \_\_init\_\_()和updatePhone()。\_\_init\_\_()在实例化时被调用，即，在AddrBookEntry()被调用时。你可以认为实例化是对 \_\_init\_\_()的一种隐式的调用，因为传给AddrBookEntry()的参数完全与\_\_init\_\_()接收到的参数是一样的（除了self,它是自动传递的）。
 
 ## 创建实例（实例化）
-~~~ python
+
+{% highlight python %}
 >>> john = AddrBookEntry('John Doe', '408-555-1212') # 为 John Doe 创建实例
 >>> jane = AddrBookEntry('Jane Doe', '650-555-1212') # 为 Jane Doe 创建实例
-~~~
+{% endhighlight %}
 
 这就是实例化调用，它会自动调用 \_\_init\_\_()。 self 把实例对象自动传入\_\_init\_\_()。
 
@@ -98,21 +97,21 @@ class AddrBookEntry(object):
 
 ## 访问实例属性
 
-~~~ python
+{% highlight python %}
 >>> john
 >>> john.name
 >>> jane.name
 >>> jane.phone
-~~~
+{% endhighlight %}
 
 一旦实例被创建后，就可以证实一下，在实例化过程中，我们的实例属性是否确实被 \_\_init\_\_() 设置了。我们可以通过解释器“转储”实例来查看它是什么类型的对象。
 
 ## 方法调用（通过实例）
 
-~~~ python
+{% highlight python %}
 >>> john.updatePhone('415-555-1212')	# 更新 John Doe 的电话
 >>> john.phone
-~~~
+{% endhighlight %}
 
 updatePhone()方法需要一个参数（不计 self 在内）：新的电话号码。在 updatePhone()之后，立即检查实例属性，可以证实已生效。
 
@@ -120,7 +119,7 @@ updatePhone()方法需要一个参数（不计 self 在内）：新的电话号�
 
 靠继承来进行子类化是创建和定制新类型的一种方式，新的类将保持已存在类所有的特性，而不会改动原来类的定义。对于新类类型而言，这个新的子类可以定制只属于它的特定功能。除了与父类或基类的关系外，子类与通常的类没有什么区别，也像一般类一样进行实例化。注意下面，子类声明中提到了父类：
 
-~~~ python
+{% highlight python %}
 class EmplAddrBookEntry(AddrBookEntry):
 	'Employee Address Book Entry class' # 员工地址簿类
 	def __init__(self, nm, ph, id, em):
@@ -130,7 +129,7 @@ class EmplAddrBookEntry(AddrBookEntry):
 	def updateEmail(self, newem):
 		self.email = newem
 		print 'Updated e-mail address for:', self.name
-~~~
+{% endhighlight %}
 
 现在我们创建了第一个子类， EmplAddrBookEntry。 Python 中，当一个类被派生出来，子类就继承了基类的属性，所以，在上面的类中，我们不仅定义了 \_\_init\_\_()，UpdateEmail()方法，而且 EmplAddrBookEntry 还从 AddrBookEntry 中继承了 updatePhone()方法。
 
@@ -140,7 +139,7 @@ class EmplAddrBookEntry(AddrBookEntry):
 
 ## 使用子类
 
-~~~ python
+{% highlight python %}
 >>> john = EmplAddrBookEntry('John Doe', '408-555-1212', 42, 'john@spam.doe')
 >>> john
 >>> john.name
@@ -150,7 +149,7 @@ class EmplAddrBookEntry(AddrBookEntry):
 >>> john.phone
 >>> john.updateEmail('john@doe.spam')
 >>> john.email
-~~~
+{% endhighlight %}
 
 一点笔记：
 

@@ -10,13 +10,11 @@ categories: python flask
 
 Python 装饰器是用于转换其它函数的函数。当一个装饰的函数被调用的时候，装饰器也会被调用。接着装饰器就会采取行动，修改参数，停止执行或者调用原始函数。我们可以使用装饰器来包装视图，让它们在执行之前运行我们希望的代码。
 
-<!-- more -->
-
-~~~ python
+{% highlight python %}
 @decorator_function
 def decorated():
     pass
-~~~
+{% endhighlight %}
 
 如果你已经浏览了 Flask 教程，在这个代码块的语法看起来很熟悉。@app.route 是用于为 Flask 应用程序的视图函数匹配 URLs 的装饰器。
 
@@ -26,7 +24,7 @@ def decorated():
 
 Flask-Login 扩展可以很容易地实现登录系统。除了处理用户认证的细节，Flask-Login 提供给我们一个装饰器，它用来限制只允许登录的用户访问某些视图： `@login_required`。
 
-~~~ python
+{% highlight python %}
 # app.py
 
 from flask import render_template
@@ -41,7 +39,7 @@ def index():
 @login_required
 def account():
     return render_template("account.html")
-~~~
+{% endhighlight %}
 
 <strong>
 `@app.route` 应该是外层的视图装饰器（换句话说， `@app.route` 应该在所有装饰器的最前面）。
@@ -57,7 +55,7 @@ def account():
 
 Flask-Cache 可以被配置成与一堆不同的缓存后端一起工作。一个流行的选择是 Redis，Redis 很容易设置和使用。假设 Flask-Cache 已经配置好，这个代码块显示我们的缓存装饰器视图是什么样子的。
 
-~~~ python
+{% highlight python %}
 # app.py
 
 from flask.ext.cache import Cache
@@ -78,7 +76,7 @@ def index():
         recent_users=recent_users,
         recent_photos=recent_photos
     )
-~~~
+{% endhighlight %}
 
 现在函数将每 60 秒会执行一次，因为 60 秒后缓存就过期。响应将会保存在我们的缓存中，在缓存没有过期之前，所有针对首页的请求都会直接从缓存中读取。
 
@@ -88,7 +86,7 @@ Flask-Cache 也为我们提供了 memoize 函数 — 或者缓存一个函数调
 
 对于这篇文章，先让我们想象下我们有一个应用程序，该应用程序每个月都会向用户收费。如果用户的账号已经过期，我们将会重定向到收费页面并且让用户升级。
 
-~~~ python
+{% highlight python %}
 # myapp/util.py
 
 from functools import wraps
@@ -107,7 +105,7 @@ def check_expired(func):
         return func(*args, **kwargs)
 
     return decorated_function
-~~~
+{% endhighlight %}
 
 * 当一个函数使用 `@check_expired` 装饰，`check_expired()` 被调用并且被装饰的 函数被作为参数进行传递。
 * `@wraps` 是一个装饰器，它做了一些工作使得 `decorated_function()` 看起来像 `func()`。这使得函数的行为多了几分自然。
@@ -116,7 +114,7 @@ def check_expired(func):
 
 当我们叠加装饰器的时候，最上层的装饰器会首先运行，接着调用下一行的下一个函数：要么是视图函数，要么就是装饰器。装饰器的语法只是 Python 提供的一个语法糖。
 
-~~~ python
+{% highlight python %}
 # This code:
 @foo
 @bar
@@ -133,11 +131,11 @@ two = foo(bar(two))
 r2 = two()
 
 r1 == r2 # True
-~~~
+{% endhighlight %}
 
 此代码块展示了一个使用我们自定义的装饰器和来自 Flask-Login 扩展的 @login_required 装饰器的示例。我们可以通过叠加使用多个装饰器。
 
-~~~ python
+{% highlight python %}
 # myapp/views.py
 
 from flask import render_template
@@ -161,7 +159,7 @@ def account_billing():
     """Update your billing info."""
     # [...]
     return render_template('account/billing.html')
-~~~
+{% endhighlight %}
 
 现在当一个用户试图访问 /use_app，check_expired() 将会确保在运行视图函数之前用户的账号没有过期。
 
@@ -171,19 +169,19 @@ def account_billing():
 
 当你在 Flask 中定义路由的时候，你可以指定路由的一部分，它们将会转换成 Python 变量并且传递到视图函数。
 
-~~~ python
+{% highlight python %}
 @app.route('/user/<username>')
 def profile(username):
     pass
-~~~
+{% endhighlight %}
 
 在 URL 中的 <username> 将会作为 username 参数传入到视图。你也可以指定一个转换器，用来在变量传入视图之前对其进行过滤筛选。
 
-~~~ python
+{% highlight python %}
 @app.route('/user/id/<int:user_id>')
 def profile(user_id):
     pass
-~~~
+{% endhighlight %}
 
 在这个代码块中，URL：http://myapp.com/user/id/Q29kZUxlc3NvbiEh 将会返回一个 404 状态码 – 未找到。这是因为 URL 中的 user_id 要求的是一个整数但实际上是一个字符串。
 

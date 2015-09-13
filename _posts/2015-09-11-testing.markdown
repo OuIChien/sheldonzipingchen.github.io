@@ -35,7 +35,7 @@ categories: ruby rspec
 
 这是一个 Test::Unit 范例，其中一个 test\_ 开头的方法，就是一个单元测试，里面的 assert\_equal 方法会进行验证。个别的单元测试应该是独立不会互相影响的：
 
-~~~ ruby
+{% highlight ruby %}
 class OrderTest < Test::Unit::TestCase
   def setup
     @order = Order.new
@@ -49,11 +49,11 @@ class OrderTest < Test::Unit::TestCase
     assert_equal @order.amount, 0
   end
 end
-~~~
+{% endhighlight %}
 
 下面是用 Rspec 语法改写，其中的一个 it 区块，就是一个单元测试，里面的 expect 方法会进行验证。在 Rspec 里，我们又把一个小单元测试叫做一个测试用例（Example）：
 
-~~~ ruby
+{% highlight ruby %}
 describe Order do
   before do
     @order = Order.new
@@ -69,7 +69,7 @@ describe Order do
     end
   end
 end
-~~~
+{% endhighlight %}
 
 Rspec 程序比 Test::Unit 更容易阅读，也更像是一种规格 Spec 文件。接下来我们继续说明 Rspec。
 
@@ -80,28 +80,28 @@ Rspec 是一套 Ruby 的测试 DSL（Domain-specific language）框架，它的�
 ###  安装 Rspec 和 Rspec-Rails
 
 在 Gemfile 中加入：
-~~~ ruby
+{% highlight ruby %}
 group :test, :development do
   gem 'rspec-rails'
 end
-~~~
+{% endhighlight %}
 
 安装：
-~~~ bash
+{% highlight bash %}
 rails generate rspec:install
-~~~
+{% endhighlight %}
 
 这样就会创建出 spec 目录来放测试程序，本来的 test 目录就用不着了。
 
 以下指令会执行所有放在 spec 目录下的测试程序：
-~~~ bash
+{% highlight bash %}
 bin/rake spec
-~~~
+{% endhighlight %}
 
 如果要测试单一用例，可以这样：
-~~~ bash
+{% highlight bash %}
 bundle exec rspec spec/models/user\_spec.rb
-~~~
+{% endhighlight %}
 
 ## 语法简介
 
@@ -111,7 +111,7 @@ bundle exec rspec spec/models/user\_spec.rb
 
 describe 和 context 帮助你组织分类，都是可以任意嵌套的，它的参数可以是一个类型，或是一个字符串描述：
 
-~~~ ruby
+{% highlight ruby %}
 describe Order do
   describe "#amount" do
     context "when user is vip" do
@@ -123,7 +123,7 @@ describe Order do
     end
   end
 end
-~~~
+{% endhighlight %}
 
 通常最外层是我们想要测试的类别，然后下一层是一个方法，然后是不同的情况。
 
@@ -131,7 +131,7 @@ end
 
 每个 it 就是一小段测试，在里面我们会用 expect(...).to 来设置期望，例如：
 
-~~~ ruby
+{% highlight ruby %}
 describe Order do
   describe "#amount" do
     context "when user is vip" do
@@ -152,7 +152,7 @@ describe Order do
     end
   end
 end
-~~~
+{% endhighlight %}
 
 除了 expect(...).to， 也有相反地 expect(...).not\_to 可以用。
 
@@ -167,7 +167,7 @@ end
 
 示例如下：
 
-~~~ ruby
+{% highlight ruby %}
 describe Order do
   describe "#amount" do
     context "when user is vip" do
@@ -193,13 +193,13 @@ describe Order do
     end
   end
 end
-~~~
+{% endhighlight %}
 
 ### let 和 let!
 
 let 可以用来简化上述的 before 用法，并且支持 lazy evaluation 和 memoized，也就是有需要才初始，并且不同单元测试之间，只会初始化一次，可以增加测试执行效率：
 
-~~~ ruby
+{% highlight ruby %}
 describe Order do
   describe "#amount" do
     context "when user is vip" do
@@ -223,7 +223,7 @@ describe Order do
     end
   end
 end
-~~~
+{% endhighlight %}
 
 通过 let 用法，可以比 before 更清楚看到谁是测试的主角，也不需要本来的 @ 了。
 
@@ -233,11 +233,11 @@ let! 则会在测试一开始就先初始一次，而不是 lazy evaluation 。
 
 你可以先列出来预计要写的测试，或是暂时不要跑的测试，以下都会被归类成 pending ：
 
-~~~ ruby
+{% highlight ruby %}
 describe "static_pages/about.html.erb", type: :view do
   pending "add some examples to (or delete) #{__FILE__}"
 end
-~~~
+{% endhighlight %}
 
 ### specify 和 example
 
@@ -247,12 +247,12 @@ specify 和 example 都是 it 方法的同义词。
 
 上述的 expect(...).to 后面可以接各种 Matcher，除了已经介绍过的 eq 之外，在 [https://www.relishapp.com/rspec/rspec-expectations/docs/built-in-matchers](https://www.relishapp.com/rspec/rspec-expectations/docs/built-in-matchers) 官方文件上可以看到更多用法。例如验证会抛出异常：
 
-~~~ ruby
+{% highlight ruby %}
 expect { ... }.to raise\_error
 expect { ... }.to raise\_error(ErrorClass)
 expect { ... }.to raise\_error("message")
 expect { ... }.to raise\_error(ErrorClass, "message")
-~~~
+{% endhighlight %}
 
 不过别担心，一开始先学会用 eq 就很够用了，其他的 Matchers 可以之后边看边学，学一招是一招。再需要深入一点的时候，你可以自己写 Matcher， Rspec 有提供扩充的 DSL 。
 
@@ -274,16 +274,16 @@ expect { ... }.to raise\_error(ErrorClass, "message")
 
 在 Gemfile 中加上 
 
-~~~ ruby
+{% highlight ruby %}
 gem 'rspec-rails', :group => [:development, :test]
-~~~
+{% endhighlight %}
 
 执行以下命令：
 
-~~~ bash
+{% highlight bash %}
 $ bundle
 $ rails g rspec: install
-~~~
+{% endhighlight %}
 
 ### 如果处理 Fixture
 
@@ -297,7 +297,7 @@ Rspec 除了可以用来写单元测试程序，我们也可以把测试的层�
 
 [Capybara](https://github.com/jnicklas/capybara) 就是一套可以搭配的工具，用来模拟浏览器行为。使用范例如下：
 
-~~~ ruby
+{% highlight ruby %}
 describe "the signup process", :type => :request do
   it "signs me in" do
     within("#session") do
@@ -307,7 +307,7 @@ describe "the signup process", :type => :request do
       click_link 'Sign in'
     end
 end
-~~~
+{% endhighlight %}
 
 如果真的需要打开浏览器测试，例如需要测试 JavaScript 和 Ajax 页面，可以使用 [Selenium](http://docs.seleniumhq.org/) 或 [Watir](http://watir.com/) 工具。真的打开浏览器测试的缺点是测试比较耗时，你没办法像单元测试一样可以经常执行得到回馈。另外在设置 CI server 上也比较麻烦，你必须另有一台桌面操作系统才能执行。
 

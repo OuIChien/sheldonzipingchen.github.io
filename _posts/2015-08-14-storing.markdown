@@ -12,8 +12,6 @@ categories: python flask
 
 另外，当你使用一个关系型数据库的话，你就会开始使用 SQLAlchemy，SQLAlchemy 是很有趣的！
 
-<!-- more -->
-
 ## SQLAlchemy
 
 SQLAlchemy 是一个 ORM（对象关系映射）。它基本上是在我们的数据库中执行的原始的 SQL 查询的之上的抽象层。它为一个长长的列表的数据库引擎提供一致的 API。其中最流行的数据库引擎包括 MySQL, PostgreSQL 和 SQLite。它使得在我们模型和数据库之间很容易地移动数据，并且它真的很容易地去做一些其它的事情，比如更换数据库引擎和迁移我们的数据库模式。
@@ -22,23 +20,23 @@ SQLAlchemy 是一个 ORM（对象关系映射）。它基本上是在我们的�
 
 让我们深入到一些代码中。我们要定义一些模型接着做一些配置工作。模型会在 myapp/models.py 中编写，但是首先需要在 myapp/__init__.py 中定义我们的数据库。
 
-~~~ python
-# ourapp/__init__.py
+{% highlight python %}
+# ourapp/\_\_init\_\_.py
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(\_\_name\_\_, instance\_relative\_config=True)
 
 app.config.from_object('config')
 app.config.from_pyfile('config.py')
 
 db = SQLAlchemy(app)
-~~~
+{% endhighlight %}
 
 首先我们初始化以及配置我们的 Flask 应用程序，接着我们使用它来初始化我们的 SQLAlchemy 处理程序。我们将要使用一个实例文件夹来为我们的数据库配置，所以当我们初始化应用程序应该使用 `instance_relative_config` 选项，接着调用 `app.config.from_pyfile` 加载它。现在我们可以定义我们的模型。
 
-~~~ python
+{% highlight python %}
 # ourapp/models.py
 
 from . import db
@@ -52,17 +50,17 @@ class Engine(db.Model):
     title = db.Column(db.String(128))
 
     thrust = db.Column(db.Integer, default=0)
-~~~
+{% endhighlight %}
 
 `Column`，`Integer`，`String`，`Model` 以及其它的 SQLAlchemy 类可以从由 Flask-SQLAlchemy 定义的 `db` 对象中引用。我们已经定义了一个模型用来存储我们飞行器引擎当前的状态。每一个飞行器引擎有一个 id，一个标题以及一个推力水平。
 
 我们还需要把一些数据库信息添加到我们配置中。我们使用一个实例文件夹为了保持敏感的配置变量不在版本控制中，所以我们将要把数据库的配置放入 instance/config.py。
 
-~~~ python
+{% highlight python %}
 # instance/config.py
 
 SQLALCHEMY_DATABASE_URI = "postgresql://user:password@localhost/spaceshipDB"
-~~~
+{% endhighlight %}
 
 * 你的数据库 URI 会根据你使用的数据库引擎而不同。请参阅 [SQLAlchemy 官方文档](http://docs.sqlalchemy.org/en/latest/core/engines.html?highlight=database#database-urls) 获取更多的内容。
 
@@ -74,7 +72,7 @@ SQLALCHEMY_DATABASE_URI = "postgresql://user:password@localhost/spaceshipDB"
 
 让我们在我们的仓库/版本库的根目录下打开一个 Python 终端。
 
-~~~ bash
+{% highlight bash %}
 $ pwd
 /Users/me/Code/myapp
 $ workon myapp
@@ -85,7 +83,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> from myapp import db
 >>> db.create_all()
 >>>
-~~~
+{% endhighlight %}
 
 现在多亏了 SQLAlchemy，我们的表已经在我们的配置中指定的数据库中创建好了。
 
@@ -99,7 +97,7 @@ Alembic 有一个很广泛的教程，大家很容易入门，因此我只给你
 
 我们将使用 `alembic init` 命令行创建我们 alembic 的“迁移环境”。一旦我们在我们的仓库/版本库中运行这个命令，我们将会有一个新的文件夹，它有一个很有创意的名字：alembic。下面这个示例改编自 Alembic 教程。
 
-~~~ bash
+{% highlight bash %}
 ourapp/
     alembic.ini
     alembic/
@@ -118,7 +116,7 @@ ourapp/
     run.py
     config.py
     requirements.txt
-~~~
+{% endhighlight %}
 
 alembic/ 目录下有在不同版本之间我们数据迁移的脚本。同样也有包含配置信息的一个 alembic.ini 文件。
 

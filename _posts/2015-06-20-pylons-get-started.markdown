@@ -95,10 +95,10 @@ categories: python pylons
 
 可以使用下面命令运行 web 应用：
 
-~~~ bash
-    cd helloworld
-    paster serve --reload development.ini
-~~~
+{% highlight bash %}
+cd helloworld
+paster serve --reload development.ini
+{% endhighlight %}
 
 这个命令会读取工程中的 development.ini 文件并启动 Pylons 应用。
 
@@ -108,30 +108,30 @@ categories: python pylons
 
 我们已经创建好了一个基本的工程，现在先让我们创建一个控制器，来处理请求。可以使用下面的命令来创建控制器：
 
-~~~ bash
-    paster controller hello
-~~~
+{% highlight bash %}
+paster controller hello
+{% endhighlight %}
 
 打开 helloworld/controllers/hello.py 模块，这个会默认返回一个 'Hello World'。
 
-~~~ python
-    import logging
+{% highlight python %}
+import logging
 
-    from pylons import request, response, session, tmpl_context as c, url
-    from pylons.controllers.util import abort, redirect
+from pylons import request, response, session, tmpl_context as c, url
+from pylons.controllers.util import abort, redirect
 
-    from helloworld.lib.base import BaseController, render
+from helloworld.lib.base import BaseController, render
 
-    log = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
-    class HelloController(BaseController):
+class HelloController(BaseController):
 
-        def index(self):
-            # Return a rendered template
-            #return render('/hello.mako')
-            # or, return a string
-            return 'Hello World'
-~~~
+    def index(self):
+        # Return a rendered template
+        #return render('/hello.mako')
+        # or, return a string
+        return 'Hello World'
+{% endhighlight %}
 
 在模块的顶部，已经导入了一些常用的组件了。
 
@@ -141,37 +141,39 @@ URL 配置解释了怎样从 URL 取得对控制器和他们的方法的映射�
 
 添加一个 Pylons 对 jinja2 的配置，在 helloworld/config/environment.py 模块里，添加如下代码：
 
-~~~ python
-    from jinja2 import Environment, PackageLoader
-    config['pylons.app_globals'].jinja2_env = Environment(
-       loader=PackageLoader('helloworld', 'templates')
-    )
-~~~
+{% highlight python %}
+from jinja2 import Environment, PackageLoader
+config['pylons.app_globals'].jinja2_env = Environment(
+   loader=PackageLoader('helloworld', 'templates')
+)
+{% endhighlight %}
 
 修改 helloworld/lib/base.py 模块 ，把 render_mako 改为 render_jinja2。
 
 添加一个 hello.html 的文件到 templates 目录下，内容如下：
 
-~~~ python
-    the time is : {{ c.now }}
-~~~
+{% highlight html %}
+{% raw %}
+the time is : {{ c.now }}
+{% endraw %}
+{% endhighlight %}
 
 修改 controllers/hello.py 模板的内容如下：
 
-~~~ python
-    from datetime import datetime
-    import logging
+{% highlight python %}
+from datetime import datetime
+import logging
 
-    from pylons import request, response, session, tmpl_context as c, url
-    from pylons.controllers.util import abort, redirect
+from pylons import request, response, session, tmpl_context as c, url
+from pylons.controllers.util import abort, redirect
 
-    from helloworld.lib.base import BaseController, render
+from helloworld.lib.base import BaseController, render
 
-    log = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
-    class HelloController(BaseController):
+class HelloController(BaseController):
 
-        def index(self):
-            c.now = datetime.now()
-            return render('/hello.html')
-~~~
+    def index(self):
+        c.now = datetime.now()
+        return render('/hello.html')
+{% endhighlight %}

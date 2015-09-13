@@ -10,8 +10,6 @@ categories: python flask
 
 一个蓝图定义了视图，模板，静态文件以及可以用于应用程序的其它元素的集合。例如，让我们假设下我们有一个管理面板的蓝图。这个蓝图会定义一些包含像 /admin/login 和 /admin/dashboard 路由的视图。它也可能包含服务于这些路由的模板以及静态文件。接着我们可以使用这个蓝图添加一个管理面板到我们的应用程序中，不论我们的应用程序是什么类型的。
 
-<!-- more -->
-
 ## 为什么要使用蓝图？
 
 蓝图“杀手级”使用场景就是把我们的应用程序组织成不同的组件。对于一个类似 Twitter 的微型博客，我们可能有一个针对网站页面的蓝图，例如，index.html 和 about.html。接着我们还有另外一个带有登录面板的蓝图，在那里我们显示了所有最新的文章，然后我们还有一个用于后台管理的面板的蓝图。网站的每一个不同的区域也能够被分成不同区域的代码来实现。这能够让我们用几个小的 “apps” 构建我们的应用程序，每一个 apps 都在做一件事情。
@@ -24,7 +22,7 @@ categories: python flask
 
 按照功能结构的话，你可以通过它们所做的事情来组织你的应用程序的结构。模板在一个文件夹中，静态文件在另一个文件夹中，视图在第三个文件夹中。
 
-~~~ bash
+{% highlight bash %}
 yourapp/
     __init__.py
     static/
@@ -38,7 +36,7 @@ yourapp/
         control_panel.py
         admin.py
     models.py
-~~~
+{% endhighlight %}
 
 除了 yourapp/views/__init__.py，在上面列表中的 yourapp/views/ 文件夹中的每一个 .py 文件都是一个蓝图。在 yourapp/__init__.py 中我们要导入这些蓝图并且在我们的 Flask() 对象中 注册 它们。我们会在本章的后面看看实现方式。
 
@@ -46,7 +44,7 @@ yourapp/
 
 对于分区结构了，你可以基于它们有助于应用程序的哪一部分来组织应用程序的结构。管理面板所有的模板，视图以及静态文件都在一个文件夹中，用户控制的所有的模板，视图和静态文件在另一个文件夹中。
 
-~~~ bash
+{% highlight bash %}
 yourapp/
     __init__.py
     admin/
@@ -65,7 +63,7 @@ yourapp/
         static/
         templates/
     models.py
-~~~
+{% endhighlight %}
 
 像上面列出的应用程序的分区结构，在 yourapp/ 中每一个文件夹都是一个单独的蓝图。所有的这些蓝图都会应用到顶层 \_\_init\_\_.py 中的 Flask() 对象中。
 
@@ -77,7 +75,7 @@ yourapp/
 
 另一方面，如果你的应用程序联系地更加紧密一些的话，它可能用一个功能结构呈现更加合适。一个示例就是 Facebook。如果 Facebook 使用 Flask 的话，它可能就有静态页（例如，登录-注销页，注册，关于等等），控制面板（例如，新闻源），个人主页（/robert/about 以及 /robert/photos），设置（/settings/security 和 /settings/privacy）等等一些蓝图。这些组件共享一个通用的布局和样式，但是每一个也会有自己的布局。下面的列表中展示了一个进行大量删减版的 Facebook 的样子，如果它是使用 Flask 构建的话。
 
-~~~ bash
+{% highlight bash %}
 facebook/
     __init__.py
     templates/
@@ -115,7 +113,7 @@ facebook/
         style.css
         logo.png
         models.py
-~~~
+{% endhighlight %}
 
 在 facebook/views/ 中的蓝图仅仅是视图的集合而不是完全独立的组件。同一的静态文件将会被大多数的蓝图的视图使用。大多数模板都会扩展一个主模板。功能结构是组织这个项目的一种好的方式。
 
@@ -125,7 +123,7 @@ facebook/
 
 让我们看看 Facebook 示例中的其中一个蓝图的代码。
 
-~~~ python
+{% highlight python %}
 # facebook/views/profile.py
 
 from flask import Blueprint, render_template
@@ -146,29 +144,29 @@ def photos(user_url_slug):
 def about(user_url_slug):
     # Do some stuff
     return render_template('profile/about.html')
-~~~
+{% endhighlight %}
 
 要创建一个蓝图对象，我们先导入 Blueprint() 类并且用参数 name 和 `import_name` 初始化它。通常情况下，`import_name` 就是 `__name__`，这是一个包含当前模块名称的特殊 Python 变量。
 
 在这个 Facebook 示例中我们使用了一个功能结构。如果我们使用分区结构的话，我们要通知 Flask 蓝图有自己的模板和静态文件夹。此块的代码大概的样子如下所示。
 
-~~~ python
+{% highlight python %}
 profile = Blueprint('profile', __name__,
                     template_folder='templates',
                     static_folder='static')
-~~~
+{% endhighlight %}
 
 现在我们已经定义我们的蓝图。是时候在我们的 Flask 应用程序中注册它。
 
-~~~ python
+{% highlight python %}
 # facebook/__init__.py
 
 from flask import Flask
 from .views.profile import profile
 
-app = Flask(__name__)
+app = Flask(\_\_name\_\_)
 app.register_blueprint(profile)
-~~~
+{% endhighlight %}
 
 现在定义在 facebook/views/profile.py 上的路由（例如，/<user\_url\_slug>）在应用程序上注册并且表现得像你使用 @app.route() 定义它们一样。
 
@@ -180,7 +178,7 @@ app.register_blueprint(profile)
 
 我们可以选择在什么时候定义我们的前缀。我们可以在两个地方中的任意一个定义前缀：当我们实例化 Blueprint() 类或者当我们用 app.register_blueprint() 注册它的时候。
 
-~~~ python
+{% highlight python %}
 # facebook/views/profile.py
 
 from flask import Blueprint, render_template
@@ -188,9 +186,9 @@ from flask import Blueprint, render_template
 profile = Blueprint('profile', __name__, url_prefix='/<user_url_slug>')
 
 # [...]
-~~~
+{% endhighlight %}
 
-~~~ python
+{% highlight python %}
 # facebook/__init__.py
 
 from flask import Flask
@@ -198,21 +196,21 @@ from .views.profile import profile
 
 app = Flask(__name__)
 app.register_blueprint(profile, url_prefix='/<user_url_slug>')
-~~~
+{% endhighlight %}
 
 尽管没有任何技术因素限制任何一种方法，最好是在注册的时候统一定义可用的前缀。这使得以后修改或者调整更加容易和方便些。因为这个原因，我建议在注册的时候设置 url\_prefix。
 
 我们可以在动态前缀中使用转换器，就像在 route() 调用中一样。这个也包含了我们自定义的转换器。当使用了转换器，我们可以在把前缀交给视图之前进行预处理。在这个例子中我们要基于传入到我们用户资料蓝图的 URL 中的 user\_url\_slug 来获取用户对象。这里我们需要使用 url\_value\_preprocessor() 装饰一个函数来完成这个需求。
 
-~~~ python
+{% highlight python %}
 # facebook/views/profile.py
 
 from flask import Blueprint, render_template, g
 
 from ..models import User
 
-# The prefix is defined on registration in facebook/__init__.py.
-profile = Blueprint('profile', __name__)
+# The prefix is defined on registration in facebook/\_\_init\_\_.py.
+profile = Blueprint('profile', \_\_name\_\_)
 
 @profile.url_value_preprocessor
 def get_profile_owner(endpoint, values):
@@ -230,7 +228,7 @@ def photos():
 @profile.route('/about')
 def about():
     return render_template('profile/about.html')
-~~~
+{% endhighlight %}
 
 我们使用 g 对象来存储用户对象并且 g 可以在 Jinja2 模板中使用。这就意味着对于实现一个极其简单的系统的话，我们现在要做的就是在视图中渲染模板。
 
@@ -240,13 +238,13 @@ def about():
 {% extends "profile/layout.html" %}
 {% endraw %}
 
-~~~ html
+{% highlight html %}
 {% raw %}
 {% for photo in g.profile_owner.photos.all() %}
     <img src="{{ photo.source_url }}" alt="{{ photo.alt_text }}" />
 {% endfor %}
 {% endraw %}
-~~~
+{% endhighlight %}
 
 ### 使用动态的子域（subdomain）
 
@@ -254,7 +252,7 @@ def about():
 
 对于这一部分，我们将要使用允许用户创建他们自己的网站的应用程序示例。假设我们的应用程序有三个蓝图，它们分别用于用户登录的主页，用户构建他们的网站的用户管理面板以及用户的网站。由于这三部分是不相关的，我们用分区结构来组织结构。
 
-~~~ bash
+{% highlight bash %}
 sitemaker/
     __init__.py
     home/
@@ -279,7 +277,7 @@ sitemaker/
         static/
             site/
     models.py
-~~~
+{% endhighlight %}
 
 下面的描述展示了本应用程序中所有的蓝图。
 
@@ -289,20 +287,20 @@ sitemaker/
 
 我们可以用定义我们 URL 前缀同样的方式来定义我们的动态子域。两个选择：在蓝图文件夹或者在顶层的 __init__.py 中都是可用的，但是我们坚持再一次把它定义在 sitemaker/\_\_init.py\_\_ 中。
 
-~~~ python
-# sitemaker/__init__.py
+{% highlight python %}
+# sitemaker/\_\_init\_\_.py
 
 from flask import Flask
 from .site import site
 
-app = Flask(__name__)
+app = Flask(\_\_name\_\_)
 app.register_blueprint(site, subdomain='<site_subdomain>')
-~~~
+{% endhighlight %}
 
 因为我们使用了分层结构，我们会在 sitema-ker/site/\_\_init\_\_.py 中定义蓝图。
 
-~~~ python
-# sitemaker/site/__init__py
+{% highlight python %}
+# sitemaker/site/\_\_init\_\_py
 
 from flask import Blueprint
 
@@ -323,23 +321,23 @@ def get_site(endpoint, values):
 # module will needto import 'site' so we need to make
 # sure that we import views after site has been defined.
 import .views
-~~~
+{% endhighlight %}
 
 现在我们从数据库中获取了站点信息，我们将会把用户的站点展示给正在请求他们子域的访问者。
 
 为了让 Flask 能和子域一起工作，我们将需要指定 SERVER_NAME 配置变量。
 
-~~~ python
+{% highlight python %}
 # config.py
 
 SERVER_NAME = 'sitemaker.com'
-~~~
+{% endhighlight %}
 
 ## 使用蓝图重构小的应用程序
 
 我们将会介绍把一个应用程序重构成使用蓝图的步骤。我们选择一个很典型的 Flask 应用程序并且重构它。
 
-~~~ bash
+{% highlight bash %}
 config.txt
 requirements.txt
 run.py
@@ -350,7 +348,7 @@ U2FtIEJsYWNr/
   templates/
   static/
 tests/
-~~~
+{% endhighlight %}
 
 views.py 文件已经增长到 10,000 行的代码！我们一直在拖延重构它的时间，但是现在是时候重构。views.py 文件包含我们网站每一部分的视图。这些部分分别是主页，用户控制面板，管理控制面板，API 和公司的博客。
 
@@ -362,7 +360,7 @@ views.py 文件已经增长到 10,000 行的代码！我们一直在拖延重构
 
 下一步我们将继续前进，并且为我们新的应用程序创建目录树。我们可以在一个包目录里为每一个蓝图创建一个文件夹。接着我们将完整地复制 views.py，static/ 和 templates/ 到每个蓝图目录。最后，我们可以从顶层包目录中删除它们（views.py，static/ 和 templates/）。
 
-~~~ bash
+{% highlight bash %}
 config.txt
 requirements.txt
 run.py
@@ -390,7 +388,7 @@ U2FtIEJsYWNr/
     templates/
   models.py
 tests/
-~~~
+{% endhighlight %}
 
 ### 步骤 3：废话少说
 
@@ -402,7 +400,7 @@ tests/
 
 这是我们把我们的目录转变成为蓝图的关键一步。关键就是在 __init__.py 文件。首先，我们看看 API 蓝图的定义。
 
-~~~ python
+{% highlight python %}
 # U2FtIEJsYWNr/api/__init__.py
 
 from flask import Blueprint
@@ -415,11 +413,11 @@ api = Blueprint(
 )
 
 import .views
-~~~
+{% endhighlight %}
 
 接下来我们在 U2FtIEJsYWNr 包顶层 __init__.py 文件里注册这个蓝图。
 
-~~~ python
+{% highlight python %}
 # U2FtIEJsYWNr/__init__.py
 
 from flask import Flask
@@ -429,11 +427,11 @@ app = Flask(__name__)
 
 # Puts the API blueprint on api.U2FtIEJsYWNr.com.
 app.register_blueprint(api, subdomain='api')
-~~~
+{% endhighlight %}
 
 确保路由是注册到蓝图上而不是应用程序（app）对象上。
 
-~~~ python
+{% highlight python %}
 # U2FtIEJsYWNr/views.py
 
 from . import app
@@ -441,9 +439,9 @@ from . import app
 @app.route('/search', subdomain='api')
 def api_search():
     pass
-~~~
+{% endhighlight %}
 
-~~~ python
+{% highlight python %}
 # U2FtIEJsYWNr/api/views.py
 
 from . import api
@@ -451,7 +449,7 @@ from . import api
 @api.route('/search')
 def search():
     pass
-~~~
+{% endhighlight %}
 
 ### 步骤 5：享受
 
