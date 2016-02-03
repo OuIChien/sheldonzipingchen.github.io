@@ -1,3 +1,10 @@
+---
+layout: post
+title: "配对交易模型简介"
+date: 2016-02-03 11:15:29 +0800
+description: 配对交易模型简介
+categories: 量化交易
+---
 # 配对交易模型
 
 配对交易是指八十年代中期华尔街著名投行 Morgan Stanley 的量化交易员 Nunzio Tartaglia 成立的一个数量分析团队提出的一种市场中性投资策略
